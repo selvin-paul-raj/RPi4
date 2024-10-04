@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-color: black;
+            color: white;
+            transition: background-color 1s ease, color 1s ease;  /* Smooth color transition */
+        }
+        h1 {
+            color: inherit;
+            transition: color 1s ease;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease;
+        }
+        button#onButton {
+            background-color: #28a745;
+            color: white;
+        }
+        button#offButton {
+            background-color: #dc3545;
+            color: white;
+        }
+        button:hover {
+            transform: scale(1.1);
+        }
+        button:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+        .status {
+            margin-top: 30px;
+            font-size: 20px;
+            color: white;
+            transition: color 1s ease;
+        }
+        .status.on {
+            color: green;
+        }
+        .status.off {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Control LED</h1>
+    <button id="onButton">Turn LED ON</button>
+    <button id="offButton">Turn LED OFF</button>
+
+    <div class="status" id="status"></div>
+
+    <script>
+        // Handle LED control and update UI with backend response and background color
+        function updateStatus(message, isOn) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+
+            if (isOn) {
+                document.body.style.backgroundColor = "white";  // Set background to white
+                document.body.style.color = "black";            // Set text color to black
+                statusDiv.classList.add('on');
+                statusDiv.classList.remove('off');
+            } else {
+                document.body.style.backgroundColor = "black";  // Set background to black
+                document.body.style.color = "white";            // Set text color to white
+                statusDiv.classList.add('off');
+                statusDiv.classList.remove('on');
+            }
+        }
+
+        document.getElementById('onButton').addEventListener('click', function() {
+            fetch('/led_control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'led=on'
+            }).then(response => response.text())
+              .then(data => {
+                  console.log(data);
+                  updateStatus('LED is ON', true);
+              });
+        });
+
+        document.getElementById('offButton').addEventListener('click', function() {
+            fetch('/led_control', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'led=off'
+            }).then(response => response.text())
+              .then(data => {
+                  console.log(data);
+                  updateStatus('LED is OFF', false);
+              });
+        });
+    </script>
+</body>
+</html>
