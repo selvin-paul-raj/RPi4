@@ -60,6 +60,10 @@ pip install Flask Flask-CORS RPi.GPIO
 ```
 python app.py
 ```
+6.running Port 
+```
+http://127.0.0.1:5000/
+```
 ## Using ngrok
 To expose your Flask application to the internet, you can use ngrok. Follow these steps:
 
